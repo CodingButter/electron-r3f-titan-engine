@@ -1,10 +1,12 @@
 import ToolsProvider from '@titan-shared/providers/ToolsProvider';
-
+import ModalProvider from '@titan-ui/providers/ModalProvider';
 const Providers = ({ children }: { children: React.ReactNode }) => {
     return (
-        <ToolsProvider>
-        {children}
-        </ToolsProvider>
+        <ModalProvider>
+            <ToolsProvider>
+                {children}
+            </ToolsProvider>
+        </ModalProvider>
     );
 }
 

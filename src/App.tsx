@@ -4,10 +4,13 @@ import Splitter from "@titan-ui/components/Splitter";
 import classNames from "classnames";
 import { useResizable } from "react-resizable-layout";
 import Titan from "@titan-engine/Titan";
+import useModal from "@titan-ui/hooks/useModal"
 
 import Toolbar from "@titan-ui/components/Toolbar";
 
 function App() {
+  const { Modal } = useModal()
+  console.log(Modal)
   const [hierarchyExpanded, setHierarchyExpanded] = useLocalStorage("hierarchyExpanded", true)
   const [hierarchyPosition, setHierarchyPosition] = useLocalStorage("hierarchyPosition", 250)
   const [inspectorPosition, setInspectorPosition] = useLocalStorage("inspectorPosition", 250)
@@ -82,6 +85,7 @@ function App() {
         <div className="z-20 bg-neutral-650 flex justify-start items-start p-2 py-0 text-[12px] font-thin text-neutral-300">
           Actions Panel
         </div>
+        { Modal && Modal }
       </div>
     </div>
   );

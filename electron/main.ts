@@ -1,24 +1,16 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
-import { FETCH_DATA_FROM_STORAGE, FETCH_DIRECTORY, SET_DATA_TO_STORAGE } from './utils/constants.json'
+import { FETCH_DATA_FROM_STORAGE, FETCH_DIRECTORY, SET_DATA_TO_STORAGE } from '../utils/constants.json'
 import path from 'node:path'
 import fs from 'node:fs'
-import { createPathIfNotExist } from './utils/helpers'
-// The built directory structure
-//
-// ├─┬─┬ dist
-// │ │ └── index.html
-// │ │
-// │ ├─┬ dist-electron
-// │ │ ├── main.js
-// │ │ └── preload.js
-// │
+import { createPathIfNotExist } from '../utils/helpers'
+
 process.env.DIST = path.join(__dirname, '../dist')
 process.env.PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
-const working = __dirname;
+const workingDir = path.join(__dirname, "electron", "storage");
 
 ipcMain.on(FETCH_DIRECTORY, (event, _path) => {
   try {
-    event.returnValue = fs.readdirSync(path.join(working, _path))
+    event.returnValue = fs.readdirSync(path.join(workingDir, _path))
   } catch (error) {
     event.returnValue = error
   }
@@ -26,7 +18,7 @@ ipcMain.on(FETCH_DIRECTORY, (event, _path) => {
 
 ipcMain.on(FETCH_DATA_FROM_STORAGE, (event, _path) => {
   try {
-    event.returnValue = fs.readFileSync(path.join(working, _path))
+    event.returnValue = fs.readFileSync(path.join(workingDir, _path))
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     event.returnValue = {
@@ -35,11 +27,11 @@ ipcMain.on(FETCH_DATA_FROM_STORAGE, (event, _path) => {
     }
   }
 })
-
-ipcMain.handle(SET_DATA_TO_STORAGE, async (_, _path, data) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ipcMain.handle(SET_DATA_TO_STORAGE, async (_, _path: string, fileName: string, data: any) => {
   try {
     if (createPathIfNotExist(_path)) {
-      fs.writeFileSync(path.join(working, _path), JSON.stringify(data))
+      fs.writeFileSync(path.join(workingDir, _path, fileName), JSON.stringify(data))
       return true
     } else {
       return false

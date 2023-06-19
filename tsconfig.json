@@ -9,6 +9,7 @@
         "skipLibCheck": true,
         "moduleResolution": "bundler",
         "allowImportingTsExtensions": true,
+        "noImplicitAny": false,
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": true,
@@ -17,25 +18,28 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
-        "baseUrl": "./src",
+        "baseUrl": ".",
         "paths": {
             "@titan/*": ["./*"],
-            "@titan-electron/*": ["../electron/*"],
-            "@titan-engine/*": ["engine/*"],
-            "@titan-ui/*": ["ui/*"],
-            "@titan-shared/*": ["shared/*"],
-            "@titan-utils/*": ["../electron/utils/*"]
+            "@titan-electron/*": ["electron/*"],
+            "@titan-engine/*": ["src/engine/*"],
+            "@titan-ui/*": ["src/ui/*"],
+            "@titan-shared/*": ["src/shared/*"],
+            "@titan-utils/*": ["utils/*"],
+            "@titan-apis/*": ["electron/apis/*"],
+            "@titan-types/*": ["types/*"]
         }
 
 
     },
     "include": [
-        "./src/**/*", "./electron/**/*"
+        "./src/**/*", "./electron/**/*", "./types/**/*", "./utils/**/*"
     ],
     "references": [
         {
             "path": "./tsconfig.node.json"
         }
-    ]
+    ],
+    "files": ["./src/index.d.ts"]
 
 }

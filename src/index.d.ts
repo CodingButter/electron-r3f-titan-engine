@@ -1,0 +1,1 @@
+declare const fileAPI: typeof import("@titan-api/fileAPI").default;

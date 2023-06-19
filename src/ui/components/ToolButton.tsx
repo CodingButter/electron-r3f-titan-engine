@@ -8,8 +8,13 @@ export interface ToolButtonProps extends ButtonProps {
     order: number
 }
 
-const ToolButton = ({ className, label, description, order, children, disabled, ...rest }:ToolButtonProps ) => {
-    const {activeTool, setActiveTool} = useTools()
+const ToolButton = ({ className, label, description, order, children, disabled,onClick, ...rest }:ToolButtonProps ) => {
+    const { activeTool, setActiveTool } = useTools()
+    
+    const click = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        setActiveTool(label)
+        onClick?.(event)
+    }
 
     return (
         <Button title={`${label}\n${description}`}
@@ -17,7 +22,7 @@ const ToolButton = ({ className, label, description, order, children, disabled, 
             size="lg"
             className={classNames("hover:bg-neutral-550 w-full h-full flex justify-center items-center text-2xl", className)}
             active={activeTool === label}
-            onClick={() => setActiveTool(label)}    
+            onClick={click}    
             disabled={disabled}
             {...rest }>
             {children}
