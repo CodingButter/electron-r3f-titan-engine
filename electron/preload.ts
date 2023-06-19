@@ -1,5 +1,5 @@
 import { contextBridge } from 'electron'
-import * as fileAPI from './apis/FileAPI'
+import fileAPI from './apis/FileAPI'
 
 contextBridge.exposeInMainWorld('fileAPI', fileAPI)
 

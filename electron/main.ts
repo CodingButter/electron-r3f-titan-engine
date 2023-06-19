@@ -1,12 +1,21 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
-import { FETCH_DATA_FROM_STORAGE, FETCH_DIRECTORY, SET_DATA_TO_STORAGE } from '../utils/constants.json'
+import { FETCH_DATA_FROM_STORAGE, FETCH_DIRECTORY, SET_DATA_TO_STORAGE, FILE_FOLDER_EXISTS, CREATE_FOLDER } from '../utils/constants.json'
 import path from 'node:path'
 import fs from 'node:fs'
 import { createPathIfNotExist } from '../utils/helpers'
 
 process.env.DIST = path.join(__dirname, '../dist')
 process.env.PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
-const workingDir = path.join(__dirname, "electron", "storage");
+const workingDir = path.join(__dirname, "storage");
+
+ipcMain.on(CREATE_FOLDER, (event, _path) => {
+  const response = createPathIfNotExist(path.join(workingDir, _path))
+  event.returnValue = response
+})
+
+ipcMain.on(FILE_FOLDER_EXISTS, (event, _path) => {
+  event.returnValue = fs.existsSync(path.join(workingDir, _path))
+})
 
 ipcMain.on(FETCH_DIRECTORY, (event, _path) => {
   try {
@@ -28,20 +37,13 @@ ipcMain.on(FETCH_DATA_FROM_STORAGE, (event, _path) => {
   }
 })
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-ipcMain.handle(SET_DATA_TO_STORAGE, async (_, _path: string, fileName: string, data: any) => {
+ipcMain.handle(SET_DATA_TO_STORAGE, async (_, _path: string, data: any) => {
   try {
-    if (createPathIfNotExist(_path)) {
-      fs.writeFileSync(path.join(workingDir, _path, fileName), JSON.stringify(data))
-      return true
-    } else {
-      return false
-    }
+    fs.writeFileSync(path.join(workingDir, _path), data)
+    return true
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return {
-      error: error?.message,
-      code: error?.code,
-    }
+    return false
   }
 })
 

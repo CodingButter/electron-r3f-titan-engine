@@ -1,18 +1,28 @@
 import { useState, createContext } from 'react'
-import { createHash } from 'crypto'
 import SceneType from '@titan-types/Scene'
 import type ProjectType  from '@titan-types/Project'
 
 export type GameManager =  {
+    updateProject: (project:ProjectType) => Promise<boolean>
     createProject: (projectName:string) => Promise<boolean>
-    createScene: (sceneName:string) => Promise<boolean>
+    updateScene: (project: ProjectType, scene:SceneType) => Promise<boolean>
+    createScene: (project:ProjectType, sceneName:string) => Promise<boolean>
     projects: ProjectType[]
     currentProject: ProjectType | null
     scenes: SceneType[]
     currentScene: SceneType | null
 }
 
-export const GameManagerContext = createContext<GameManager|null>(null)
+export const GameManagerContext = createContext<GameManager>({
+    updateProject: () => Promise.resolve(false),
+    createProject: () => Promise.resolve(false),
+    updateScene: () => Promise.resolve(false),
+    createScene: () => Promise.resolve(false),
+    projects: [],
+    currentProject: null,
+    scenes: [],
+    currentScene: null
+})
 
 const GameManagerProvider = ({ children }: { children: React.ReactNode }) => {
     const [projects, setProjects] = useState<ProjectType[]>([])
@@ -20,55 +30,59 @@ const GameManagerProvider = ({ children }: { children: React.ReactNode }) => {
     const [scenes, setScenes] = useState<SceneType[]>([])
     const [currentScene, setCurrentScene] = useState<SceneType|null>(null)
     
-    const createProject = async (projectName: string):Promise<boolean> => {
-        const projectId = createHash('sha256')
-            .update(projectName)
-            .digest('hex');
-        if (filesAPI.exists(projectId)) return false
-
-            filesAPI.createFolder(projectId)
-            filesAPI.createFolder(`${projectId}/assets`)
-            filesAPI.createFolder(`${projectId}/assets/images`)
-            filesAPI.createFolder(`${projectId}/assets/sounds`)
-            filesAPI.createFolder(`${projectId}/assets/fonts`)
-            filesAPI.createFolder(`${projectId}/assets/scripts`)
-            filesAPI.createFolder(`${projectId}/assets/scenes`)
-            filesAPI.createFolder(`${projectId}/assets/animations`)
-            filesAPI.createFolder(`${projectId}/assets/tilemaps`)
-            if(!(await filesAPI.saveFile(
-                projectId,
-                'project.json',
-                JSON.stringify({ name: projectName })
-        ))) return false
+    const createProject = async (projectName: string): Promise<boolean> => {
+        const projectId = crypto.randomUUID()
+        if (fileAPI.exists(projectId)) return false
+        fileAPI.createFolder(projectId)
+        fileAPI.createFolder(`${projectId}/assets`)
+        fileAPI.createFolder(`${projectId}/assets/images`)
+        fileAPI.createFolder(`${projectId}/assets/sounds`)
+        fileAPI.createFolder(`${projectId}/assets/fonts`)
+        fileAPI.createFolder(`${projectId}/assets/scripts`)
+        fileAPI.createFolder(`${projectId}/assets/scenes`)
+        fileAPI.createFolder(`${projectId}/assets/animations`)
+        fileAPI.createFolder(`${projectId}/assets/tilemaps`)
         const project = { name: projectName, id: projectId }
-            setCurrentProject(project)
-            setProjects((prevProjects) => [...prevProjects, project])
-            return true
+        setCurrentProject(project)
+        setProjects((prevProjects) => [...prevProjects, project]);
+        createScene(project, 'Scene 1')
+        return updateProject(project)
     }
 
-    const createScene = async (sceneName: string): Promise<boolean> => {
-    const sceneId = createHash('sha256')
-        .update(sceneName)
-        .digest('hex')
-    const sceneFile = `${sceneId}.json`
-    if (!currentProject) {
-        return false
-    }
-    if (!filesAPI.exists(`${currentProject.id}/assets/scenes`)) return false
-    if (filesAPI.exists(`${currentProject.id}/assets/scenes/${sceneFile}`)) return false
-        if (!(await filesAPI.saveFile(
-            `${currentProject.id}/assets/scenes/`,
-            sceneFile,
-            JSON.stringify({ name: sceneName, id: sceneId })
-        ))) return false;
-        const scene:SceneType = { name: sceneName, id: sceneId, projectId: currentProject.id }
+    const createScene = async (project: ProjectType, sceneName:string): Promise<boolean> => {
+        if(!project) return false
+        const sceneId = crypto.randomUUID()
+        const scene:SceneType = { name: sceneName, id: sceneId, projectId: project.id }
+        if(!await updateScene(project,scene)) return false
         setCurrentScene(() => scene)
+        setScenes((prevScenes) => [...prevScenes, scene])
+        return true
+    }
+
+    const updateProject = async (project: ProjectType): Promise<boolean> => {
+        const { id } = project
+            if(!(await fileAPI.saveFile(
+                id,
+                'project.json',
+                JSON.stringify(project,null,4)
+        ))) return false
+        return true
+    }
+
+    const updateScene = async (project:ProjectType, scene:SceneType): Promise<boolean> => {
+        const { id } = scene
+        if (!project || !scene) return false
+        if (!(await fileAPI.saveFile(
+            `${project.id}/assets/scenes/`,
+            `${id}.json`,
+            JSON.stringify(scene,null,4)
+        ))) return false;
         setScenes((prevScenes:SceneType[]) => [...prevScenes, scene])
         return true
     }
 
     return (
-        <GameManagerContext.Provider value={{ createProject, createScene, projects,currentProject,scenes,currentScene }}>
+        <GameManagerContext.Provider value={{ createProject, createScene,updateProject,updateScene, projects,currentProject,scenes,currentScene }}>
             {children}
         </GameManagerContext.Provider>
     )

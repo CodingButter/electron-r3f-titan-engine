@@ -13,11 +13,11 @@ export default function Modal({ closeModal, closed, show, setShow, children, ...
   const modalStyles = useSpring({
     config: { velocity: 0.003, mass: 0.7, tension: 500, friction: 24 },
     to: !closed
-      ? async (next, _) => {
+      ? async (next) => {
           setShow(true)
           await next({ opacity: 1, scaleY: 1 })
         }
-      : async (next, _) => {
+      : async (next) => {
           await next({ opacity: 0, scaleY: 0 })
           setShow(false)
         },

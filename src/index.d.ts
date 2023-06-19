@@ -1,1 +1,1 @@
-declare const fileAPI: typeof import("@titan-api/fileAPI").default;
+declare const fileAPI: typeof import("@titan-apis/FileAPI").default

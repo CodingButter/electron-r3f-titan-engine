@@ -10,7 +10,6 @@ import Toolbar from "@titan-ui/components/Toolbar";
 
 function App() {
   const { Modal } = useModal()
-  console.log(Modal)
   const [hierarchyExpanded, setHierarchyExpanded] = useLocalStorage("hierarchyExpanded", true)
   const [hierarchyPosition, setHierarchyPosition] = useLocalStorage("hierarchyPosition", 250)
   const [inspectorPosition, setInspectorPosition] = useLocalStorage("inspectorPosition", 250)

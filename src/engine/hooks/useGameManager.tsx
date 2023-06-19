@@ -1,12 +1,4 @@
-import { createContext, useContext } from 'react'
-export interface GameManager {
-    getState: () => any
-}
-
-export const GameManagerContext = createContext<GameManager>(
-    {
-        getState: () => ({})
-    })
-
-
-export const useGameManager = () => useContext(GameManagerContext)
+import { useContext } from 'react'
+import { GameManagerContext } from '../providers/GameManagerProvider'
+const useGameManager = () => useContext(GameManagerContext)
+export default useGameManager
