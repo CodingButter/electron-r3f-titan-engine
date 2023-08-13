@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState} from "react"
 import useLocalStorage from "@titan-shared/hooks/useLocalStorage"
-import Splitter from "@titan-ui/components/Splitter"
+import Splitter, {SplitterDirection} from "@titan-ui/components/Splitter"
 import classNames from "classnames"
 import { useResizable } from "react-resizable-layout"
-import Titan from "@titan-engine/Titan"
+import Titan from "@titan/src/Titan"
 import useModal from "@titan-ui/hooks/useModal"
 import Hierarchy from "@titan-ui/components/Hierarchy"
 import FileMenu from "@titan-ui/components/FileMenu"
@@ -87,7 +87,7 @@ function App() {
       <FileMenu />
       <div className="w-full h-full absolute left-1/2 -top-1/2 m-auto">
         <div className="absolute w-full h-full -left-1/2 top-1/2">
-          <Titan />
+          <Titan/>
         </div>
       </div>
       <div className={"flex h-full w-full flex-col text-neutral-100 relative z-20"}>
@@ -108,7 +108,7 @@ function App() {
           </div>
           <Splitter
             id="HierarchySplitter"
-            dir="vertical"
+            direction={SplitterDirection.VERTICAL}
             hide={!hierarchyExpanded}
             isDragging={isHierarchyDragging}
             {...hierarchyDragBarProps}
@@ -117,7 +117,7 @@ function App() {
             <div className={"grow flex justify-center items-center w-full"}></div>
             <Splitter
               id="AssetManagerSplitter"
-              dir="horizontal"
+              direction={SplitterDirection.HORIZONTAL}
               isDragging={isAssetManagerDragging}
               {...assetManagerDragBarProps}
             />
@@ -132,7 +132,7 @@ function App() {
           </div>
           <Splitter
             id="InpsectorSplitter"
-            dir="vertical"
+            direction={SplitterDirection.VERTICAL}
             isDragging={isInspectorDragging}
             {...inspectorDragBarProps}
           />
