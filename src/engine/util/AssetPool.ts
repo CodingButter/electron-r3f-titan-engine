@@ -1,6 +1,7 @@
-import Spritesheet from "titan/components/Spritesheet";
-import Shader from "titan/renderer/Shader";
-import Texture from "titan/renderer/Texture";
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import Spritesheet from "@titan-engine/components/Spritesheet";
+import Shader from "@titan-engine/renderer/Shader";
+import Texture from "@titan-engine/renderer/Texture";
 
 export default class AssetPool {
     private static shaders: Map<string, Shader> = new Map<string, Shader>();

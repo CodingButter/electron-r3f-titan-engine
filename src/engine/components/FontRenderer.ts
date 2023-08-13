@@ -1,4 +1,4 @@
-import Component from "titan/Component";
+import Component from "@titan-engine/Component";
 
 export default class FontRenderer extends Component {
     public start(): void { }

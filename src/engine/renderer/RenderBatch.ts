@@ -1,8 +1,8 @@
-import SpriteRenderer from "titan/components/SpriteRenderer";
+import SpriteRenderer from "@titan-engine/components/SpriteRenderer";
 import Shader from "./Shader";
-import Window from "titan/Window"
-import Time from "titan/util/Time";
-import AssetPool from "titan/util/AssetPool";
+import Window from "@titan-engine/Window"
+import Time from "@titan-engine/util/Time";
+import AssetPool from "@titan-engine/util/AssetPool";
 import Texture from "./Texture";
 
 export default class RenderBatch {

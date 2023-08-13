@@ -2,7 +2,7 @@ import { vec2, vec4 } from "gl-matrix";
 import LevelEditorScene from "./scenes/LevelEditorScene";
 import type Scene from "./scenes/Scene";
 import Time from "./util/Time";
-import EventEmitter from "events";
+import EventEmitter from "@titan-engine/util/EventEmitter"
 
 export default class Window extends EventEmitter {
     public static resizable = false;

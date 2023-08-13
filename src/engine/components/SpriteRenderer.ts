@@ -1,9 +1,9 @@
-import Component from "titan/Component"
-import Texture from "titan/renderer/Texture";
-import Sprite from "titan/components/Sprite";
+import Component from "@titan-engine/Component"
+import Texture from "@titan-engine/renderer/Texture";
+import Sprite from "@titan-engine/components/Sprite";
 import { vec4, vec2 } from "gl-matrix"
-import Transform from "titan/Transform";
-import AssetPool from "titan/util/AssetPool";
+import Transform from "@titan-engine/Transform";
+import AssetPool from "@titan-engine/util/AssetPool";
 
 export default class SpriteRenderer extends Component {
     private _color: vec4 = vec4.fromValues(1.0, 1.0, 1.0, 1.0);
