@@ -12,6 +12,7 @@
         "noImplicitAny": false,
         "resolveJsonModule": true,
         "isolatedModules": true,
+        "no-inferrable-types": false,
         "noEmit": true,
         "jsx": "react-jsx",
         "strict": true,

@@ -1,4 +1,5 @@
-import EventEmitter from "events";
+import EventEmitter from "@titan-engine/util/EventEmitter"
+
 import {vec2} from "gl-matrix";
 export default class MouseListener extends EventEmitter{
     private static instance: MouseListener | undefined;

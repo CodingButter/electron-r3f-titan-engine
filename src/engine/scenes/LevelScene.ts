@@ -1,5 +1,5 @@
 import Scene from "./Scene";
-import type Shader from "titan/renderer/Shader";
+import type Shader from "@titan-engine/renderer/Shader";
 
 export default class LevelScene extends Scene {
     public getShader(): Shader {

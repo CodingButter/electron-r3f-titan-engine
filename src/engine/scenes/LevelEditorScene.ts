@@ -1,16 +1,17 @@
 import { vec2 } from "gl-matrix";
 import Scene from "./Scene";
-import Camera from "titan/Camera";
-import Renderer from "titan/renderer/Renderer";
-import AssetPool from "titan/util/AssetPool";
-import Spritesheet from "titan/components/Spritesheet";
+import Camera from "@titan-engine/Camera";
+import Renderer from "@titan-engine/renderer/Renderer";
+import AssetPool from "@titan-engine/util/AssetPool";
+import Spritesheet from "@titan-engine/components/Spritesheet";
+
 
 
 
 export default class LevelEditorScene extends Scene {
-  private spriteIndex: number = 0;
+  private spriteIndex = 0;
   private sprites: Spritesheet | null = null;
-  private assetsLoaded: boolean = false;
+  private assetsLoaded = false;
 
   public init(): void {
     this.camera = new Camera(vec2.fromValues(0, 0))
@@ -25,7 +26,7 @@ export default class LevelEditorScene extends Scene {
   }
 
   private loadResources(loaded: () => void): void {
-    AssetPool.getShader("/assets/shaders/default.glsl")
+    AssetPool.getShader("http://localhost:8080/default.glsl")
     const spritesheet = new Spritesheet(AssetPool.getTexture("/assets/images/tileset.png"), 8 * 8, 64, 64)
     AssetPool.addSpritesheet("/assets/images/tileset.png", spritesheet)
     spritesheet.on("load", loaded)
@@ -34,7 +35,7 @@ export default class LevelEditorScene extends Scene {
   public update(dt: number): void {
     if (!this.assetsLoaded) return;
     this.camera.adjustProjection();
-    for (let gameObject of this.gameObjects) {
+    for (const gameObject of this.gameObjects) {
       gameObject?.update(dt);
     }
     this.renderer.render()

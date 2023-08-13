@@ -1,4 +1,4 @@
-import Texture from "titan/renderer/Texture";
+import Texture from "@titan-engine/renderer/Texture";
 import { vec2 } from "gl-matrix";
 
 export default class Sprite {

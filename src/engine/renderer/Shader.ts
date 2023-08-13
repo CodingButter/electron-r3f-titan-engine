@@ -1,5 +1,6 @@
-import Window from "titan/Window";
+import Window from "@titan-engine/Window";
 import type { mat4, vec2, vec3, vec4 } from "gl-matrix";
+import fetch from "electron-fetch"
 
 type ShaderSources = {
     vertexShaderSource: string | null;
@@ -8,10 +9,10 @@ type ShaderSources = {
 export default class Shader {
     private static shaderSources: Map<string, ShaderSources> = new Map<string, ShaderSources>();
     private filePath: string;
-    private vertexShaderSource: string = "";
-    private fragmentShaderSource: string = "";
+    private vertexShaderSource = "";
+    private fragmentShaderSource = "";
     private shaderProgram: WebGLProgram | null = null;
-    private beingUsed: boolean = false;
+    private beingUsed = false;
     private gl: WebGL2RenderingContext
 
     constructor(filePath: string) {
@@ -21,7 +22,7 @@ export default class Shader {
     }
 
     public async loadCompileLink(): Promise<void> {
-        const response = await fetch(this.filePath, { cache: "force-cache", mode: 'same-origin' })
+        const response = await fetch(this.filePath)
         const shaderString = await response.text();
         this.vertexShaderSource = Shader.getShader(shaderString, "vertex");
         this.fragmentShaderSource = Shader.getShader(shaderString, "fragment");

@@ -1,6 +1,6 @@
-import type GameObject from "titan/GameObject";
+import type GameObject from "@titan-engine/GameObject";
 import RenderBatch from "./RenderBatch";
-import SpriteRenderer from "titan/components/SpriteRenderer";
+import SpriteRenderer from "@titan-engine/components/SpriteRenderer";
 import Texture from "./Texture";
 
 export default class Renderer {

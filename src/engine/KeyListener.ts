@@ -1,4 +1,5 @@
-import { EventEmitter } from "events";
+import EventEmitter from "@titan-engine/util/EventEmitter"
+
 
 export default class KeyListener extends EventEmitter{
     private static instance: KeyListener | undefined;

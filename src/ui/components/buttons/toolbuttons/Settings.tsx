@@ -1,13 +1,9 @@
 import ToolButton from "@titan-ui/components/buttons/ToolButton"
-import { ButtonProps } from "@titan-ui/components/Button"
-import useGameManager from "@titan/src/engine/hooks/useGameManager"
-import { GameManager } from "@titan/src/engine/providers/GameManagerProvider"
+import { ButtonProps } from "@titan-ui/components/buttons/Button"
 
 export default function Settings({ ...rest }: ButtonProps) {
-  const { createProject } = useGameManager() as GameManager
 
   const click = () => {
-    createProject("New Project")
   }
 
   return (

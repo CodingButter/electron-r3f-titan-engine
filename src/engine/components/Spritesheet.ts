@@ -1,13 +1,12 @@
-import Texture from "titan/renderer/Texture";
+import Texture from "@titan-engine/renderer/Texture";
 import Sprite from "./Sprite";
 import { vec2 } from "gl-matrix";
-import EventEmitter from "events";
-
+import EventEmitter from "@titan-engine/util/EventEmitter"
 export default class Spritesheet extends EventEmitter {
     private texture: Texture;
     private sprites: Set<Sprite> = new Set<Sprite>();
 
-    constructor(texture: Texture | null, numSprites: number = 1, spriteWidth: number = 16, spriteHeight?: number, spacing?: number) {
+    constructor(texture: Texture | null, numSprites = 1, spriteWidth = 16, spriteHeight?: number, spacing?: number) {
         super();
         this.texture = texture as Texture;
         this.texture.on("load", () => {
@@ -23,10 +22,10 @@ export default class Spritesheet extends EventEmitter {
         let currentX = 0;
         let currentY = texture.getHeight() - spriteHeight;
         for (let i = 0; i < numSprites; i++) {
-            let topY = (currentY + spriteHeight) / texture.getHeight();
-            let rightX = (currentX + spriteWidth) / texture.getWidth();
-            let leftX = currentX / texture.getWidth();
-            let bottomY = currentY / texture.getHeight()
+            const topY = (currentY + spriteHeight) / texture.getHeight();
+            const rightX = (currentX + spriteWidth) / texture.getWidth();
+            const leftX = currentX / texture.getWidth();
+            const bottomY = currentY / texture.getHeight()
 
             const texCoords = [
                 vec2.fromValues(rightX, topY),

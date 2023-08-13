@@ -1,6 +1,6 @@
 import { vec3 } from "gl-matrix";
-import Component from "titan/Component";
-import { Num } from "titan/util/DataTypes";
+import Component from "@titan-engine/Component";
+import { Num } from "@titan-engine/util/DataTypes";
 
 export class RigidBody extends Component {
     private colliderType: number = 0;

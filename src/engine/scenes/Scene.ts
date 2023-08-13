@@ -1,7 +1,7 @@
-import Camera from "titan/Camera";
-import GameObject from "titan/GameObject";
-import Renderer from "titan/renderer/Renderer";
-import EventEmitter from "events";
+import Camera from "@titan-engine/Camera";
+import GameObject from "@titan-engine/GameObject";
+import Renderer from "@titan-engine/renderer/Renderer";
+import EventEmitter from "@titan-engine/util/EventEmitter"
 
 export default abstract class Scene {
     protected renderer: Renderer = {} as Renderer;

@@ -1,8 +1,9 @@
-import Window from "titan/Window"
-import EventEmitter from "events";
+import Window from "@titan-engine/Window"
+import EventEmitter from "@titan-engine/util/EventEmitter"
+
 
 export default class Texture extends EventEmitter {
-    private filePath: string = "";
+    private filePath = "";
     private textID: WebGLTexture | undefined;
     private width: number | undefined;
     private height: number | undefined;
@@ -37,7 +38,7 @@ export default class Texture extends EventEmitter {
         const gl = this._gl as WebGL2RenderingContext;
         const image = new Image();
         image.src = this.filePath;
-        image.onload = (ev: Event) => {
+        image.onload = () => {
             //check for error
             if (image.width <= 0 || image.height <= 0) {
                 console.error("Error loading image: " + this.filePath);
