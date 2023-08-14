@@ -1,1 +1,1 @@
-declare type Layer = 'World' | 'UI';
+export type Layer = "World" | "UI"
