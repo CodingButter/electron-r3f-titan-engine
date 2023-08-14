@@ -1,16 +1,19 @@
-import { useEffect, useState} from "react"
-import useLocalStorage from "@titan-shared/hooks/useLocalStorage"
-import Splitter, {SplitterDirection} from "@titan-ui/components/Splitter"
+import { useEffect, useState,useRef} from "react"
+import useLocalStorage from "@app/hooks/useLocalStorage"
+import Splitter, {SplitterDirection} from "@app/components/Splitter"
 import classNames from "classnames"
 import { useResizable } from "react-resizable-layout"
-import Titan from "@titan/src/Titan"
-import useModal from "@titan-ui/hooks/useModal"
-import Hierarchy from "@titan-ui/components/Hierarchy"
-import FileMenu from "@titan-ui/components/FileMenu"
-import Toolbar from "@titan-ui/components/Toolbar"
+import useModal from "@app/hooks/useModal"
+import Hierarchy from "@app/components/Hierarchy"
+import FileMenu from "@app/components/FileMenu"
+import Toolbar from "@app/components/Toolbar"
+import Titan from "@app/Titan"
+import Providers from "@app/providers"
 
 const maxPanelSize = 300
 function App() {
+  
+  const canvasRef = useRef<HTMLCanvasElement>(null)
   const { Modal } = useModal()
   const [windowSize, setWindowSize] = useState([window.innerWidth, window.innerHeight])
   const [hierarchyExpanded, setHierarchyExpanded] = useLocalStorage("hierarchyExpanded", true)
@@ -80,6 +83,7 @@ function App() {
     }
   }, [])
   return (
+    <Providers canvasRef={canvasRef}>
     <div
       className={
         "w-screen h-screen justify-center items-center overflow-clip flex flex-col relative"
@@ -87,7 +91,7 @@ function App() {
       <FileMenu />
       <div className="w-full h-full absolute left-1/2 -top-1/2 m-auto">
         <div className="absolute w-full h-full -left-1/2 top-1/2">
-          <Titan/>
+          <Titan canvasRef={canvasRef} />
         </div>
       </div>
       <div className={"flex h-full w-full flex-col text-neutral-100 relative z-20"}>
@@ -150,7 +154,8 @@ function App() {
         </div>
         {Modal && Modal}
       </div>
-    </div>
+      </div>
+      </Providers>
   )
 }
 

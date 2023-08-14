@@ -1,21 +1,27 @@
-import { useEffect, useRef } from 'react'
-import Window from '@titan-engine/Window'
-
-const Titan = () => {
-  const containerRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (!containerRef.current) return
-    const engineWindow = Window.get(containerRef.current)
-    engineWindow.run()
-    return () => {
-      window.stop()
-    }
-  }, [containerRef])
-
-  return (
-    <div ref={containerRef}/>
-  )
+import { useEffect } from "react"
+import useTitanEngine from "@app/hooks/useTitanEngine"
+interface TitanProps{
+  canvasRef:React.MutableRefObject<HTMLCanvasElement|null>
 }
 
+const Titan = ({ canvasRef }: TitanProps) => {
+  const { titanEngine } = useTitanEngine()
+
+
+
+  useEffect(() => {
+    const updateSize = () => {
+        if (titanEngine != null) {
+          titanEngine.setSize(window.innerWidth, window.innerHeight);
+        }
+    }
+    window.addEventListener("resize", updateSize);
+    return () => {
+      window.removeEventListener("resize", updateSize);
+    }
+  }, [titanEngine])
+  return (
+    <canvas className="w-screen h-screen" ref={canvasRef} id="titan-canvas"></canvas>
+  )
+}
 export default Titan

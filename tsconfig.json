@@ -12,26 +12,21 @@
         "noImplicitAny": false,
         "resolveJsonModule": true,
         "isolatedModules": true,
-        "no-inferrable-types": false,
         "noEmit": true,
         "jsx": "react-jsx",
         "strict": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
-        "baseUrl": ".",
+        "types": [
+            "electron-vite/node", "src/titan/engines/types"
+        ],
+        "baseUrl": "./",
         "paths": {
-            "@titan/*": ["./*"],
-            "@titan-electron/*": ["electron/*"],
-            "@titan-engine/*": ["src/engine/*"],
-            "@titan-ui/*": ["src/ui/*"],
-            "@titan-shared/*": ["src/shared/*"],
-            "@titan-utils/*": ["utils/*"],
-            "@titan-apis/*": ["electron/apis/*"],
-            "@titan-types/*": ["types/*"]
+            "@electron/*": ["electron/*"],
+            "@app/*": ["src/*"],
+            "@titan/*": ["src/titan/*"]
         }
-
-
     },
     "include": [
         "./src/**/*", "./electron/**/*", "./types/**/*", "./utils/**/*"

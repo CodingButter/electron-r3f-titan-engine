@@ -1,9 +1,6 @@
 import { contextBridge } from 'electron'
 import fileAPI from './apis/FileAPI'
-
 contextBridge.exposeInMainWorld('fileAPI', fileAPI)
-
-
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
   return new Promise(resolve => {
     if (condition.includes(document.readyState)) {

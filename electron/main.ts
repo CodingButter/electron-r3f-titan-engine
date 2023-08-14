@@ -10,6 +10,8 @@ import path from "node:path"
 import fs from "node:fs"
 import { createPathIfNotExist } from "./helpers"
 
+
+app.commandLine.appendSwitch("ignore-certificate-errors", "true")
 process.env.DIST = path.join(__dirname, "../dist")
 process.env.PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, "../public")
 const workingDir = path.join(__dirname, "storage")
@@ -61,6 +63,7 @@ function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.PUBLIC, "electron-vite.svg"),
     webPreferences: {
+      nodeIntegration: true,
       preload: path.join(__dirname, "preload.js"),
     },
   })
