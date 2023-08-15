@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import Renderable from "@titan/engines/render/renderable";
+import Renderable from "@titan/render/renderable";
 
 export default class Cube extends Renderable {
     constructor() {

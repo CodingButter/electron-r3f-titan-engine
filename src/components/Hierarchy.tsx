@@ -1,7 +1,7 @@
 import classNames from "classnames"
 import { useState } from "react"
 import useTitanEngine from "@app/hooks/useTitanEngine"
-import Entity from "@app/titan/engines/core/entity"
+import Entity from "@app/titan/Scene/Entity"
 
 interface HierarchyProps extends React.HTMLAttributes<HTMLDivElement> {
   expanded: boolean

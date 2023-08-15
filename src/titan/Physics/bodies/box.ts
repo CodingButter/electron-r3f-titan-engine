@@ -1,7 +1,7 @@
 import CANNON from "cannon"
 import * as THREE from "three"
-import Body from "@titan/engines/physics/body"
-import Entity from "@titan/engines/core/entity"
+import Body from "@titan/physics/body"
+import Entity from "@app/titan/Scene/Entity"
 
 export default class Box extends Body {
   constructor(
@@ -14,7 +14,7 @@ export default class Box extends Body {
     const shape = new CANNON.Box(new CANNON.Vec3(scale.x, scale.y, scale.z))
     super(entity, { mass, position, shape })
   }
-  update(delta: number) {
-    super.update(delta)
+  update() {
+    super.update()
   }
 }

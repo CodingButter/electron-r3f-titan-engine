@@ -1,4 +1,4 @@
-import CoreEngine from "@app/titan/engines/core"
+import CoreEngine from "@app/titan/Core/Core"
 let Core: CoreEngine;
 
 type TitanEngine = {
