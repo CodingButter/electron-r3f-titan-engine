@@ -1,4 +1,4 @@
-import Rigidbody from "@titan/Scene/Component/RigidBody"
+import Rigidbody from "@app/titan/Scene/Component/CollisionComponent"
 export default {
     Rigidbody
 }

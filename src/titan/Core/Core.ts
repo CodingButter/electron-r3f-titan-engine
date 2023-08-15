@@ -1,28 +1,30 @@
-import { Scene as SceneType } from "@titan/types"
-import Scene from "@titan/Scene/Scene"
+//<reference path="../types/index.d.ts" />
+import Scene from "@app/titan/Scene/Scene"
 import RenderEngine from "@titan/Renderer/Renderer"
 import PhysicsEngine from "@titan/PhysicsEngine/PhysicsEngine"
-import Entity from "@app/titan/Scene/Entity"
 
 export default class Core {
+    static instance: Core
     scene!: Scene
-    entities: Entity[] = []
-    renderEngine: RenderEngine
-    physicsEngine: PhysicsEngine
+    renderEngine!: RenderEngine
+    physicsEngine!: PhysicsEngine
     running = false
-    constructor(canvas: HTMLCanvasElement, width = 800, height = 600) {
+    init(canvas: HTMLCanvasElement, width = 800, height = 600) {
+        this.scene = new Scene()
+        Scene.changeScene(this.scene.id)
         this.renderEngine = new RenderEngine("Titan Engine", canvas, width, height)
         this.physicsEngine = new PhysicsEngine()
+        this.run();
     }
 
-    public loadScene(jsonString: string) {
-        const json = <SceneType>JSON.parse(jsonString)
-        this.scene = Scene.fromJSON(json)
-        this.scene.engine = this;
+    destroy() {
+        this.scene.destroy();
     }
 
     public run() {
+        if (this.running) return
         this.running = true
+        this.scene.init()
         this.update(Date.now())
         this.render()
     }
@@ -36,10 +38,7 @@ export default class Core {
         const time = Date.now()
         const delta = prevTime ? (time - prevTime) / 1000 : 0
         this.physicsEngine.update(delta)
-        this.entities.forEach((entity) => {
-            entity.update(delta)
-        })
-
+        this.scene.update(delta)
         setTimeout(() => {
             this.update(time)
         }, 0)
@@ -47,11 +46,16 @@ export default class Core {
 
     private render() {
         if (!this.running) return
-        this.entities.forEach((entity: Entity) => {
-            entity.render()
-        })
+        this.scene.render()
         this.renderEngine.render()
         requestAnimationFrame(this.render.bind(this))
+    }
+
+    public static get(): Core {
+        if (!Core.instance) {
+            Core.instance = new Core()
+        }
+        return Core.instance
     }
 
 }

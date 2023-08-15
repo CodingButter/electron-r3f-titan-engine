@@ -4,10 +4,11 @@ import {
   useState,
   PropsWithChildren,
 } from "react";
-import TitanEngine from "@app/titan/interface"; 
 
-export const TitanEngineContext = createContext<{ titanEngine: TitanEngine | null }>({
-  titanEngine: null,
+import TitanEngine from "@titan/interface"; 
+
+export const TitanEngineContext = createContext<{ titan: TitanEngine | null }>({
+  titan: null,
 });
 
 export interface TitanEngineProviderProps extends PropsWithChildren {
@@ -17,20 +18,19 @@ export interface TitanEngineProviderProps extends PropsWithChildren {
 }
 
 const TitanEngineProvider = ({ children, canvasRef }: TitanEngineProviderProps) => {
-  const [titanEngine, setTitanEngine] = useState<TitanEngine | null>(null);
+  const [titanEngine, setTitanEngine] = useState<TitanEngine|null>(null);
 
   useEffect(() => {
     if (canvasRef.current != null) {
-      TitanEngine.configure(canvasRef.current,window.innerWidth,window.innerHeight)
-      TitanEngine.run();
-      setTitanEngine(TitanEngine);
+      TitanEngine.init(canvasRef.current,window.innerWidth,window.innerHeight)
+      setTitanEngine(()=>TitanEngine);
     }
     return () => {
-      TitanEngine.stop();
+      TitanEngine.destroy();
     }
   }, [canvasRef,titanEngine]);
   return (
-    <TitanEngineContext.Provider value={{ titanEngine }}>
+    <TitanEngineContext.Provider value={{ titan:titanEngine }}>
       {children}
     </TitanEngineContext.Provider>
   );

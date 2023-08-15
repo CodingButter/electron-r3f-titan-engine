@@ -1,4 +1,4 @@
-import Display from "@titan/render/display"
+import Display from "@titan/Renderer/Display"
 import * as THREE from "three"
 
 export default class RenderEngine {
