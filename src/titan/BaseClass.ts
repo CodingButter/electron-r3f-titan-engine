@@ -1,32 +1,56 @@
 import { v4 as uuid4 } from "uuid"
+import Scene from "@titan/Scene/Scene"
+import Entity from "@titan/Scene/Entity"
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const keys = (x: any) => Object.getOwnPropertyNames(x).concat(Object.getOwnPropertyNames(x?.__proto__))
+Map.prototype.toJSON = function () {
+    return <object>Array.from(this.entries() || []).reduce((obj: any, [key, val]: [string, any]) => {
+        obj[key] = val
+        return obj
+    }, {})
+}
 
-const isObject = (v: object) => Object.prototype.toString.call(v) === '[object Object]'
-
-const classToObject = (clss: object) => keys(clss ?? {}).reduce((object, key) => {
-    const [val, arr, obj] = [clss[key], Array.isArray(clss[key]), isObject(clss[key])]
-    object[key] = arr ? val.map(classToObject) : obj ? classToObject(val) : val
-    return object
-}, { className: "" })
+Set.prototype.toJSON = function () {
+    return [...this]
+}
 
 export default class BaseClass {
     static names: string[] = []
     id = uuid4()
     name: string = this.constructor.name
-    constructor() {
+    sceneId?: string
+    entityId?: string
+    __scene: Scene | undefined
+    __entity: Entity | undefined
+    constructor(entity?: Entity, scene?: Scene) {
+        this.scene = scene || entity?.scene
+        this.entity = entity
         this.name = `${this.name} ${BaseClass.names.filter(name => name.includes(this.name)).length + 1}`
         BaseClass.names.push(this.name)
     }
+    get scene(): Scene | undefined {
+        return this.__scene
+    }
+
+    set scene(scene: Scene | undefined) {
+        this.sceneId = scene?.id
+        this.__scene = scene
+    }
+
+    get entity(): Entity | undefined {
+        return this.__entity
+    }
+
+    set entity(entity: Entity | undefined) {
+        this.entityId = entity?.id
+        this.__entity = entity
+    }
     toJSON(): object {
-        const jsonObject = classToObject(this)
-        jsonObject.className = this.constructor.name
-        Object.keys(jsonObject).forEach((key) => {
+        Object.keys(this).forEach((key) => {
             if (key.startsWith("__")) {
-                delete jsonObject[key]
+                delete this[key]
             }
         })
+        const jsonObject = { className: this.constructor.name, ...this }
         return jsonObject
     }
 }

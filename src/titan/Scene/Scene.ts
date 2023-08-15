@@ -1,18 +1,16 @@
-import Core from "@app/titan/Core/Core";
 import Entity from "@titan/Scene/Entity";
 import BaseClass from "@titan/BaseClass";
 import Component from "@titan/Scene/Component/Component";
 import ScriptComponent from "@titan/Scene/Component/ScriptComponent";
 
 export default class Scene extends BaseClass {
-    static scenes: Map<string, Scene> = new Map()
-    engine!: Core
+    static scenes: Map<string, Scene> = new Map<string, Scene>()
     entities: Map<string, Entity> = new Map<string, Entity>()
     components: Map<string, Set<Component>> = new Map<string, Set<Component>>()
     static currentScene: Scene;
     constructor() {
         super();
-        this.engine = Core.get()
+        //this.engine = Core.get()
         Scene.scenes.set(this.id, this)
         //Do Stuff
     }
@@ -60,11 +58,12 @@ export default class Scene extends BaseClass {
             }
         `
         const myScriptComponent = new ScriptComponent(entity1, myScript)
+        myScriptComponent.parseScript();
         entity1.addComponent<ScriptComponent>(myScriptComponent)
         this.scriptInit()
 
 
-        console.log(this)
+        console.log(JSON.stringify(this, null, 4))
     }
 
     scriptInit() {
@@ -73,17 +72,23 @@ export default class Scene extends BaseClass {
             script.init()
         })
     }
+
     // eslint-disable-next-line 
-    getComponents<T extends Component>(componentClass: ComponentClass | string): Set<T> {
+    getComponents<T extends Component>(componentClass: ComponentClass): Set<T> {
         return <Set<T>>this.components.get(typeof componentClass == "string" ? componentClass : componentClass.name) || new Set<T>()
     }
+    getComponentById<T extends Component>(componentClass: ComponentClass, componentId: string): T | undefined {
+        const components = this.getComponents<T>(componentClass)
+        return [...components].find(component => component.id === componentId)
+    }
+
     // eslint-disable-next-line
-    getComponent<T extends Component>(componentClass: ComponentClass | string, entityId: string): T | undefined {
+    getComponent<T extends Component>(componentClass: ComponentClass, entityId: string): T | undefined {
         const components = this.getComponents<T>(componentClass)
         return [...components].find(component => component.entity.id === entityId)
     }
 
-    removeComponent<T extends Component>(component: T | string, entityId: string) {
+    removeComponent<T extends Component>(component: T, entityId: string) {
         if (typeof component == "string") {
             component = <T>this.getComponent<T>(component, entityId)
         }
@@ -96,10 +101,11 @@ export default class Scene extends BaseClass {
 
     }
 
-
-    update(delta: number) {
+    // eslint-disable-next-line
+    update(deltaTime: number) {
         //Do stuff
     }
+
     render() {
         //Do stuff
     }
@@ -114,7 +120,6 @@ export default class Scene extends BaseClass {
     }
 
     addComponent<T extends Component>(component: T) {
-
         let componentSet = this.components.get(component.constructor.name)
         if (!componentSet) {
             componentSet = new Set([component])
@@ -140,15 +145,15 @@ export default class Scene extends BaseClass {
     }
 
     static changeScene(sceneId: string) {
-        Scene.currentScene = Scene.getSceneById(sceneId)
+        Scene.currentScene = <Scene>Scene.getSceneById(sceneId)
     }
 
     static getCurrentScene() {
         return Scene.currentScene
     }
 
-    static getSceneById(id: string): Scene {
-        return <Scene>Scene.scenes.get(id)
+    static getSceneById(id: string): Scene | undefined {
+        return Scene.scenes.get(id)
     }
 
 }

@@ -1,7 +1,6 @@
 import TTN from '@app/titan/Core/ScriptingAPI/TTN'
 import Component from '@titan/Scene/Component/Component'
 import Entity from '@titan/Scene/Entity'
-import Scene from '@app/titan/Scene/Scene'
 import Script from '@titan/Core/ScriptingAPI/Script'
 
 
@@ -10,16 +9,18 @@ import Script from '@titan/Core/ScriptingAPI/Script'
 export default class ScriptComponent extends Component {
     ttn: TTN
     scripts: Map<string, Script> = new Map()
+    code: string
     constructor(entity: Entity, script: string) {
         super(entity)
+        this.code = script
         this.ttn = new TTN(this)
         this.ttn.createScript = (scriptName: string): Script => {
             TTN.scripts.set(scriptName, script);
-            const newScript: Script = new Script(scriptName, this.entity)
+            const newScript: Script = new Script(scriptName, this)
             this.scripts.set(scriptName, newScript)
             return newScript
         }
-        this.attachScript(script)
+        this.parseScript()
     }
     init() {
         this.scripts.forEach((script) => {
@@ -30,11 +31,11 @@ export default class ScriptComponent extends Component {
     update(delta: number) {
         console.log("script must have update function")
     }
-    attachScript(script) {
+    parseScript() {
         // eslint-disable-next-line no-eval
         let ttn = this.ttn
 
-        eval(script)
+        eval(this.code)
     }
 
 

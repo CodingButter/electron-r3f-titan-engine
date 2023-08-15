@@ -5,14 +5,23 @@ import ScriptComponent from "@titan/Scene/Component/ScriptComponent";
 import BaseClass from "@titan/BaseClass";
 
 export default class TTN extends BaseClass {
-    scriptComponent: ScriptComponent;
+    scriptComponentId!: string;
     public static scripts: Map<string, string> = new Map<string, string>();
+    public static scriptIntances: Map<string, Script> = new Map<string, Script>();
     createScript!: (scriptName: string, script: string) => Script;
     constructor(scriptComponent: ScriptComponent) {
         super()
-        this.scriptComponent = scriptComponent;
+        this.scriptComponentId = scriptComponent.id;
     }
     createEntity(): Entity {
         return new Entity(Scene.getCurrentScene());
+    }
+
+    get scriptComponent(): ScriptComponent | undefined {
+        return Scene.getCurrentScene().getComponentById<ScriptComponent>(ScriptComponent, this.scriptComponentId)
+    }
+
+    set scriptComponent(scriptComponent: ScriptComponent) {
+        this.scriptComponentId = scriptComponent.id;
     }
 }
