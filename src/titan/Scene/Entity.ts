@@ -1,32 +1,53 @@
-import Component from "@titan/Scene/Component"
-import { v4 as uuidv4 } from "uuid"
+import Component from "@titan/Scene/Component/Component"
+import TransformComponent from "@titan/Scene/Component/TransformComponent"
 import BaseClass from "@titan/BaseClass"
-import Scene from "@app/titan/Scene/Scene"
+import Scene from "@titan/Scene/Scene"
+import Components from "@titan/Scene/Component/Components"
 
 export default class Entity extends BaseClass {
-    sceneId!: string
-    components: Map<string, Set<Component>> = new Map()
-    id = uuidv4()
-    name = "Entity"
 
     constructor(scene: Scene) {
-        super()
-        this.scene = scene
+        super(undefined, scene)
+        this.addComponent<TransformComponent>(new TransformComponent())
     }
 
-    addComponent<T extends Component>(component: T) {
-        if (!this.components.has(component.constructor.name))
-            this.components.set(component.constructor.name, new Set())
-        this.components.get(component.constructor.name)?.add(component)
+    static createComponent<T extends Partial<Component>>(componentName: string, ...args: ConstructorParameters<(new (...args: any) => T)>): T {
+        const component = new Components[componentName](...args) as T
+        return component
+    }
+
+    addComponent<T extends Partial<Component>>(component: T): T {
         component.entity = this
+        if (this.hasComponent<T>(component)) {
+            console.assert(process.env.NODE_ENV === "production", `Component ${component.constructor.name} already exists on entity ${this.name}`)
+        } else {
+            this.scene?.addComponent<T>(component)
+        }
+        return component
     }
 
-    //Getters and Setters
-    get scene() {
-        return Scene.getSceneById(this.sceneId)
-    }
-    set scene(scene: Scene) {
-        this.sceneId = scene.id
+    getComponent<T extends Partial<Component>>(componentClass: T): T | undefined {
+        return this.scene?.getComponent<T>(typeof componentClass, this.id)
     }
 
+    getComponentById<T extends Partial<Component>>(componentClass: ComponentClass, componentId: string): T | undefined {
+        return this.scene?.getComponentById<T>(componentClass, componentId)
+    }
+
+    hasComponent<T extends Partial<Component>>(componentClass: T): boolean {
+        return this.getComponent<T>(componentClass) !== undefined
+    }
+
+    removeComponent<T extends Partial<Component>>(componentClass: T): void {
+        this.scene?.removeComponent<T>(componentClass, this.id)
+    }
+
+    get components(): Component[] {
+        return this.scene?.getComponentsByEntityId(this.id) || []
+    }
+
+    loadState(state:any){
+        this.id = state.id
+        this.name = state.name
+    }
 }
