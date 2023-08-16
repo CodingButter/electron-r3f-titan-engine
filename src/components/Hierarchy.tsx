@@ -18,22 +18,20 @@ const Hierarchy = ({ expanded, setExpanded }: HierarchyProps) => {
   }
 
   const selectEntity = (id: number) => {
-    if (selectedEntities.includes(id))
-      selectedEntities.splice(selectedEntities.indexOf(id), 1)
+    if (selectedEntities.includes(id)) selectedEntities.splice(selectedEntities.indexOf(id), 1)
     else selectedEntities.push(id)
     selectObjects([...selectedEntities])
   }
 
   const addCube = () => {
     if (titan) {
-      const component = titan.scene.createEntity()
-      titan.scene.addEntity(component)
+      const entity = titan.scene.createEntity()
+      titan.scene.addEntity(entity)
       setEntities(() => {
         return [...titan.scene.entities.values()]
-      });
+      })
     }
   }
-    
 
   return (
     <div className={classNames("flex flex-col w-full h-full grow", !expanded && "bg-neutral-700")}>
@@ -67,7 +65,9 @@ const Hierarchy = ({ expanded, setExpanded }: HierarchyProps) => {
             <button className="flex items-center justify-center rounded-sm shadow bg-neutral-600 text-[12px] p-2">
               <i className="fa-solid fa-plus" />
             </button>
-            <button onClick={addCube} className="flex items-center justify-center rounded-sm shadow bg-neutral-600 text-[12px] p-2">
+            <button
+              onClick={addCube}
+              className="flex items-center justify-center rounded-sm shadow bg-neutral-600 text-[12px] p-2">
               <i className="fa-solid fa-plus" />
             </button>
           </div>
@@ -128,7 +128,7 @@ const ExpandableMenu = ({ children, title, className, ...props }: ExpandableMenu
   )
 }
 
-interface EntityItemProps extends React.HTMLAttributes<HTMLButtonElement>{
+interface EntityItemProps extends React.HTMLAttributes<HTMLButtonElement> {
   className?: string
   isSelected?: boolean
 }
