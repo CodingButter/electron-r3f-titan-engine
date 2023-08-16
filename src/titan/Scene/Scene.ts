@@ -1,6 +1,7 @@
 import Entity from "@titan/Scene/Entity";
 import BaseClass from "@titan/BaseClass";
 import Component from "@titan/Scene/Component/Component";
+import Components from "@titan/Scene/Component/Components";
 import ScriptComponent from "@titan/Scene/Component/ScriptComponent";
 
 export default class Scene extends BaseClass {
@@ -20,50 +21,7 @@ export default class Scene extends BaseClass {
     }
 
     init() {
-        const entity1 = new Entity(this)
-        this.addEntity(entity1)
-        const myScript = `
-            const testScript = ttn.createScript("testScript");
-            const bullet = ttn.createEntity()
-
-            class MyRigidBody extends Component {
-                constructor(entity) {
-                    super(entity)
-                }
-                update(dt) {
-                    console.log("updating")
-                }
-            }
-
-            bullet.name = "Big Bullet"
-            this.entity.addComponent(new MyRigidBody(this.entity))
-            testScript.attributes.add("someAttribute", {
-                type: "string",
-                default: "Hello World",
-                description:"this is a test string"
-            })
-
-            testScript.attributes.add("someNumber", {
-                type: "number",
-                default: 0.0,
-                description:"this is a test number"
-            })
-
-            testScript.init = ()=> {
-                this.entity.removeComponent("MyRigidBody")
-            }
-
-            testScript.update = (dt)=> {
-
-            }
-        `
-        const myScriptComponent = new ScriptComponent(entity1, myScript)
-        myScriptComponent.parseScript();
-        entity1.addComponent<ScriptComponent>(myScriptComponent)
         this.scriptInit()
-
-
-        console.log(JSON.stringify(this, null, 4))
     }
 
     scriptInit() {
@@ -73,35 +31,33 @@ export default class Scene extends BaseClass {
         })
     }
 
-    // eslint-disable-next-line 
-    getComponents<T extends Component>(componentClass: ComponentClass): Set<T> {
+    getComponents<T extends Partial<Component>>(componentClass: ComponentClass): Set<T> {
         return <Set<T>>this.components.get(typeof componentClass == "string" ? componentClass : componentClass.name) || new Set<T>()
     }
-    getComponentById<T extends Component>(componentClass: ComponentClass, componentId: string): T | undefined {
+
+    getComponentById<T extends Partial<Component>>(componentClass: ComponentClass, componentId: string): T | undefined {
         const components = this.getComponents<T>(componentClass)
         return [...components].find(component => component.id === componentId)
     }
 
-    // eslint-disable-next-line
-    getComponent<T extends Component>(componentClass: ComponentClass, entityId: string): T | undefined {
+    getComponent<T extends Partial<Component>>(componentClass: ComponentClass, entityId: string): T | undefined {
         const components = this.getComponents<T>(componentClass)
-        return [...components].find(component => component.entity.id === entityId)
+        return [...components].find(component => (<BaseClass>component)?.entity?.id === entityId)
     }
 
-    removeComponent<T extends Component>(component: T, entityId: string) {
+    removeComponent<T extends Partial<Component>>(component: T, entityId: string) {
         if (typeof component == "string") {
             component = <T>this.getComponent<T>(component, entityId)
         }
         if (component) {
             const componentSet = this.components.get(component.constructor.name)
             if (componentSet) {
-                componentSet.delete(component)
+                componentSet.delete(<Component>component)
             }
         }
 
     }
 
-    // eslint-disable-next-line
     update(deltaTime: number) {
         //Do stuff
     }
@@ -119,14 +75,14 @@ export default class Scene extends BaseClass {
         this.entities.set(entity.id, entity)
     }
 
-    addComponent<T extends Component>(component: T) {
-        let componentSet = this.components.get(component.constructor.name)
+    addComponent<T extends Partial<Component>>(component: T) {
+        let componentSet: Set<Component> | undefined = this.components.get(component.constructor.name)
         if (!componentSet) {
-            componentSet = new Set([component])
+            componentSet = new Set([component]) as Set<Component>
             this.components.set(component.constructor.name, componentSet)
 
         } else {
-            componentSet.add(component)
+            componentSet.add(component as Component)
         }
 
     }
@@ -156,4 +112,21 @@ export default class Scene extends BaseClass {
         return Scene.scenes.get(id)
     }
 
-}
+    loadState(state: any) {
+        this.id = state.id
+        this.name = state.name
+        Object.keys(state.entities).forEach(entityId => {
+            const entity = this.createEntity()
+            entity.loadState(state.entities[entityId])
+        })
+        Object.keys(state.components).forEach(componentType => {
+            const componentSet = state.components[componentType]
+            componentSet.forEach((component: any) => {
+                if (!Components[componentType]) return
+                const componentClass = Components[componentType]
+                const componentInstance = new componentClass()
+                componentInstance.loadState(component)
+            })
+        })
+    }
+} 

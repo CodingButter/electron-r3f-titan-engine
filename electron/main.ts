@@ -36,7 +36,7 @@ ipcMain.on(FETCH_DIRECTORY, (event, _path) => {
 ipcMain.on(FETCH_DATA_FROM_STORAGE, (event, _path) => {
   try {
     event.returnValue = fs.readFileSync(path.join(workingDir, _path))
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   } catch (error: any) {
     event.returnValue = {
       error: error?.message,
@@ -44,12 +44,12 @@ ipcMain.on(FETCH_DATA_FROM_STORAGE, (event, _path) => {
     }
   }
 })
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 ipcMain.handle(SET_DATA_TO_STORAGE, async (_, _path: string, data: any) => {
   try {
     fs.writeFileSync(path.join(workingDir, _path), data)
     return true
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   } catch (error: any) {
     return false
   }

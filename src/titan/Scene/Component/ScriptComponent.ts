@@ -10,7 +10,7 @@ export default class ScriptComponent extends Component {
     ttn: TTN
     scripts: Map<string, Script> = new Map()
     code: string
-    constructor(entity: Entity, script: string) {
+    constructor(script: string, entity?: Entity) {
         super(entity)
         this.code = script
         this.ttn = new TTN(this)
@@ -20,23 +20,31 @@ export default class ScriptComponent extends Component {
             this.scripts.set(scriptName, newScript)
             return newScript
         }
-        this.parseScript()
     }
     init() {
         this.scripts.forEach((script) => {
             script.init()
         })
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     update(delta: number) {
         console.log("script must have update function")
     }
     parseScript() {
-        // eslint-disable-next-line no-eval
-        let ttn = this.ttn
+        const ttn = this.ttn
 
         eval(this.code)
     }
 
+    loadState(state: any) {
+        this.code = state.code
+        this.name = state.name
+        this.id = state.id
+        Object.keys(state.scripts).forEach((scriptName: any) => {
+            const script = state.scripts[scriptName]
+            const newScript = new Script(scriptName, this)
+            newScript.loadState(script)
+            this.scripts.set(script.name, newScript)
+        })
+    }
 
 }

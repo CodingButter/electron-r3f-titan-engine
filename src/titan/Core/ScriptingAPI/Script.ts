@@ -60,9 +60,9 @@ export default class Script extends BaseClass {
     attributes: Attributes;
     componentId!: string;
     __component!: ScriptComponent;
-    constructor(component: ScriptComponent) {
+    constructor(name: string, component: ScriptComponent) {
         super(component.entity)
-        this.name = component.code
+        this.name = name
         this.attributes = new Attributes(this)
         this.component = component
     }
@@ -78,4 +78,11 @@ export default class Script extends BaseClass {
 
     update!: (delta: number) => void
     init!: () => void
+
+    loadState(state:any){
+        Object.keys(state.attributes.attributes).forEach((attributeName:string) => {
+            const attribute = state.attributes.attributes[attributeName]
+            this.attributes.add(attributeName, attribute)
+        })
+    }
 }

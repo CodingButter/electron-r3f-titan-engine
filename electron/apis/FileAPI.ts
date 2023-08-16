@@ -12,7 +12,7 @@ export default {
         }
     },
     exists: (path: string) => ipcRenderer.sendSync(FILE_FOLDER_EXISTS, path),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     saveFile: (path: string, fileName: string, data: any) => ipcRenderer.invoke(SET_DATA_TO_STORAGE, `${path}/${fileName}`, data),
     createFolder: (path: string) => ipcRenderer.sendSync(CREATE_FOLDER, path)
 }

@@ -19,7 +19,7 @@
         "noUnusedParameters": false,
         "noFallthroughCasesInSwitch": true,
         "types": [
-            "electron-vite/node", "src/titan/engines/types"
+            "electron-vite/node", "src/titan/types/*"
         ],
         "baseUrl": "./",
         "paths": {
