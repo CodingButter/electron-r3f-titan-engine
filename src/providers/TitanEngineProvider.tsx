@@ -6,8 +6,9 @@ import {
 } from "react";
 
 import TitanEngine from "@titan/interface"; 
+import Core from "@titan/Core/Core";
 
-export const TitanEngineContext = createContext<{ titan: TitanEngine | null }>({
+export const TitanEngineContext = createContext<{ titan: Core | null }>({
   titan: null,
 });
 
@@ -18,14 +19,22 @@ export interface TitanEngineProviderProps extends PropsWithChildren {
 }
 
 const TitanEngineProvider = ({ children, canvasRef }: TitanEngineProviderProps) => {
-  const [titanEngine, setTitanEngine] = useState<TitanEngine|null>(null);
+  const [titanEngine, setTitanEngine] = useState<Core|null>(null);
 
   useEffect(() => {
+        const resize = () => {
+        TitanEngine.setSize(window.innerWidth,window.innerHeight)
+      }
     if (canvasRef.current != null) {
-      TitanEngine.init(canvasRef.current,window.innerWidth,window.innerHeight)
-      setTitanEngine(()=>TitanEngine);
+      TitanEngine.init(canvasRef.current, window.innerWidth, window.innerHeight)
+      TitanEngine.getCore().run()
+      setTitanEngine(() => TitanEngine.getCore());
+  
+      window.addEventListener('resize', resize)
+      
     }
     return () => {
+      window.removeEventListener('resize',resize)
       TitanEngine.destroy();
     }
   }, [canvasRef,titanEngine]);

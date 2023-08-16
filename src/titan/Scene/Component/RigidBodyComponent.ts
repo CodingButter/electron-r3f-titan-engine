@@ -7,5 +7,6 @@ export default class RigidBodyComponent extends Component {
     }
     loadState(state: any): void {
         //Do Stuff
+        super.loadState(state);
     }
 }

@@ -1,8 +1,5 @@
 import BaseClass from "@titan/BaseClass"
-import Scene from "@app/titan/Scene/Scene"
-import Entity from "@titan/Scene/Entity"
 import ScriptComponent from "@titan/Scene/Component/ScriptComponent"
-import TTN from "@titan/Core/ScriptingAPI/TTN"
 
 interface ScriptAttributeProps {
     name: string
@@ -59,10 +56,12 @@ class Attributes extends BaseClass {
 export default class Script extends BaseClass {
     attributes: Attributes;
     componentId!: string;
+    code!: string;
     __component!: ScriptComponent;
-    constructor(name: string, component: ScriptComponent) {
+    constructor(name: string, component: ScriptComponent, code: string) {
         super(component.entity)
         this.name = name
+        this.code = code
         this.attributes = new Attributes(this)
         this.component = component
     }
@@ -79,8 +78,13 @@ export default class Script extends BaseClass {
     update!: (delta: number) => void
     init!: () => void
 
-    loadState(state:any){
-        Object.keys(state.attributes.attributes).forEach((attributeName:string) => {
+    loadState(state: any) {
+        super.loadState(state)
+        this.componentId = state.componentId
+        this.name = state.name
+        this.code = state.code
+        this.attributes = new Attributes(this)
+        Object.keys(state.attributes.attributes).forEach((attributeName: string) => {
             const attribute = state.attributes.attributes[attributeName]
             this.attributes.add(attributeName, attribute)
         })

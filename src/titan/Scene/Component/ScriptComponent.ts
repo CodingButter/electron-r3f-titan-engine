@@ -2,49 +2,48 @@ import TTN from '@app/titan/Core/ScriptingAPI/TTN'
 import Component from '@titan/Scene/Component/Component'
 import Entity from '@titan/Scene/Entity'
 import Script from '@titan/Core/ScriptingAPI/Script'
-
-
+import App from "@titan/Core/ScriptingAPI/App"
 
 
 export default class ScriptComponent extends Component {
-    ttn: TTN
+    __ttn: TTN
     scripts: Map<string, Script> = new Map()
-    code: string
-    constructor(script: string, entity?: Entity) {
+    app!: App
+    constructor(entity?: Entity, script?: string) {
         super(entity)
-        this.code = script
-        this.ttn = new TTN(this)
-        this.ttn.createScript = (scriptName: string): Script => {
-            TTN.scripts.set(scriptName, script);
-            const newScript: Script = new Script(scriptName, this)
+        this.__ttn = new TTN(this)
+    }
+    attachCode(code: string) {
+        this.app = new App(<Entity>this.entity)
+        this.__ttn.createScript = (scriptName: string): Script => {
+            TTN.scripts.set(scriptName, code);
+            const newScript: Script = new Script(scriptName, this, code)
             this.scripts.set(scriptName, newScript)
             return newScript
         }
+
+        // @ts-ignore
+        const ttn = this.__ttn
+        eval(code)
     }
     init() {
         this.scripts.forEach((script) => {
-            script.init()
+            script.init.bind(script)()
         })
     }
     update(delta: number) {
         console.log("script must have update function")
     }
-    parseScript() {
-        const ttn = this.ttn
-
-        eval(this.code)
-    }
 
     loadState(state: any) {
-        this.code = state.code
-        this.name = state.name
-        this.id = state.id
+        super.loadState(state)
+        this.__ttn = new TTN(this)
         Object.keys(state.scripts).forEach((scriptName: any) => {
             const script = state.scripts[scriptName]
-            const newScript = new Script(scriptName, this)
+            const newScript = new Script(scriptName, this, script.code)
             newScript.loadState(script)
-            this.scripts.set(script.name, newScript)
+            this.attachCode(script.code)
         })
+        this.entity?.addComponent(this)
     }
-
 }

@@ -3,12 +3,14 @@ import TransformComponent from "@titan/Scene/Component/TransformComponent"
 import BaseClass from "@titan/BaseClass"
 import Scene from "@titan/Scene/Scene"
 import Components from "@titan/Scene/Component/Components"
+import { Vec3 } from "@titan/Core/Utils/Matrix"
 
 export default class Entity extends BaseClass {
-
+    transform: TransformComponent
     constructor(scene: Scene) {
         super(undefined, scene)
-        this.addComponent<TransformComponent>(new TransformComponent())
+        this.transform = new TransformComponent()
+        this.addComponent(this.transform)
     }
 
     static createComponent<T extends Partial<Component>>(componentName: string, ...args: ConstructorParameters<(new (...args: any) => T)>): T {
@@ -16,17 +18,51 @@ export default class Entity extends BaseClass {
         return component
     }
 
+    get position() {
+        return this.transform.position
+    }
+
+    set position(position: Vec3) {
+        this.transform.position.x = position.x
+        this.transform.position.y = position.y
+        this.transform.position.z = position.z
+    }
+
+    get rotation() {
+        return this.transform.rotation
+    }
+
+    set rotation(rotation: Vec3) {
+        this.transform.rotation.x = rotation.x
+        this.transform.rotation.y = rotation.y
+        this.transform.rotation.z = rotation.z
+    }
+
+    get scale() {
+        return this.transform.scale
+    }
+
+    set scale(scale: Vec3) {
+        this.transform.scale.x = scale.x
+        this.transform.scale.y = scale.y
+        this.transform.scale.z = scale.z
+    }
+
+
+
+
     addComponent<T extends Partial<Component>>(component: T): T {
         component.entity = this
+        component.runtime = component.entity.runtime
         if (this.hasComponent<T>(component)) {
-            console.assert(process.env.NODE_ENV === "production", `Component ${component.constructor.name} already exists on entity ${this.name}`)
+            console.assert(false, `Component ${component.constructor.name} already exists on entity ${this.name}`)
         } else {
             this.scene?.addComponent<T>(component)
         }
         return component
     }
 
-    getComponent<T extends Partial<Component>>(componentClass: T): T | undefined {
+    getComponent<T extends Partial<Component>>(componentClass: ComponentClass): T | undefined {
         return this.scene?.getComponent<T>(typeof componentClass, this.id)
     }
 
@@ -46,8 +82,7 @@ export default class Entity extends BaseClass {
         return this.scene?.getComponentsByEntityId(this.id) || []
     }
 
-    loadState(state:any){
-        this.id = state.id
-        this.name = state.name
+    loadState(state: any) {
+        super.loadState(state)
     }
 }

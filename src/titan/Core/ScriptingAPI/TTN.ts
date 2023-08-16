@@ -3,6 +3,7 @@ import Scene from "@app/titan/Scene/Scene";
 import Script from "@titan/Core/ScriptingAPI/Script"
 import ScriptComponent from "@titan/Scene/Component/ScriptComponent";
 import BaseClass from "@titan/BaseClass";
+import TransformComponent from "@titan/Scene/Component/TransformComponent";
 
 export default class TTN extends BaseClass {
     scriptComponentId!: string;
@@ -10,11 +11,16 @@ export default class TTN extends BaseClass {
     public static scriptIntances: Map<string, Script> = new Map<string, Script>();
     createScript!: (scriptName: string, script: string) => Script;
     constructor(scriptComponent: ScriptComponent) {
-        super()
+        super(scriptComponent.entity)
         this.scriptComponentId = scriptComponent.id;
     }
-    createEntity(): Entity {
-        return new Entity(Scene.getCurrentScene());
+    createEntity(name:string): Entity | undefined {
+        const entity = <Entity>this.scene?.createEntity();
+        entity.name = name;
+        entity.runtime = true;
+        const transformComponent = <TransformComponent>this.scene?.getComponent<TransformComponent>(TransformComponent, entity.id);
+        transformComponent.runtime = true
+        return entity;
     }
 
     get scriptComponent(): ScriptComponent | undefined {

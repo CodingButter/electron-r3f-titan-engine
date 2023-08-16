@@ -20,6 +20,6 @@ export default class Component extends BaseClass {
 
     loadState(state: any) {
         //OVERRIDE
-        console.assert(process.env.NODE_ENV === 'production', 'Component.loadState() not implemented')
+        super.loadState(state)
     }
 }

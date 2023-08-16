@@ -1,8 +1,10 @@
+import Core from "@titan/Core/Core";
 import Entity from "@titan/Scene/Entity";
 import BaseClass from "@titan/BaseClass";
 import Component from "@titan/Scene/Component/Component";
 import Components from "@titan/Scene/Component/Components";
 import ScriptComponent from "@titan/Scene/Component/ScriptComponent";
+import MeshComponent from "@app/titan/Scene/Component/MeshComponent";
 
 export default class Scene extends BaseClass {
     static scenes: Map<string, Scene> = new Map<string, Scene>()
@@ -18,6 +20,8 @@ export default class Scene extends BaseClass {
 
     destroy() {
         //Do Stuff
+        Scene.scenes.delete(this.id)
+        BaseClass.names = []
     }
 
     init() {
@@ -60,22 +64,36 @@ export default class Scene extends BaseClass {
 
     update(deltaTime: number) {
         //Do stuff
+        [...this.entities.values()].forEach(entity => {
+            entity.position.z += 0.01 * deltaTime
+            console.log(entity.position.z)
+        })
+
     }
 
     render() {
         //Do stuff
+        this.getComponents<MeshComponent>(MeshComponent)?.forEach(meshComponent => {
+            meshComponent.render()
+        })
     }
 
     createEntity() {
-        return new Entity(this)
+        const mesh = new MeshComponent()
+        const entity = new Entity(this)
+        entity.addComponent(mesh)
+        return entity
     }
 
     addEntity(entity: Entity) {
         entity.scene = this
         this.entities.set(entity.id, entity)
+        Core.get().renderEngine.addEntity(entity.mesh)
+        console.log(this)
     }
 
     addComponent<T extends Partial<Component>>(component: T) {
+        component.scene = this
         let componentSet: Set<Component> | undefined = this.components.get(component.constructor.name)
         if (!componentSet) {
             componentSet = new Set([component]) as Set<Component>
@@ -101,8 +119,9 @@ export default class Scene extends BaseClass {
     }
 
     static changeScene(sceneId: string) {
-        Scene.currentScene = <Scene>Scene.getSceneById(sceneId)
+        Scene.currentScene = <Scene>Scene.scenes.get(sceneId)
     }
+
 
     static getCurrentScene() {
         return Scene.currentScene
@@ -112,13 +131,17 @@ export default class Scene extends BaseClass {
         return Scene.scenes.get(id)
     }
 
+
     loadState(state: any) {
-        this.id = state.id
-        this.name = state.name
+        Scene.scenes.set(state.id, this)
+
+        this.entities.clear()
         Object.keys(state.entities).forEach(entityId => {
             const entity = this.createEntity()
             entity.loadState(state.entities[entityId])
+
         })
+        this.components.clear()
         Object.keys(state.components).forEach(componentType => {
             const componentSet = state.components[componentType]
             componentSet.forEach((component: any) => {
@@ -128,5 +151,7 @@ export default class Scene extends BaseClass {
                 componentInstance.loadState(component)
             })
         })
+
+
     }
-} 
+}

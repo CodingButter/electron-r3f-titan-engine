@@ -2,48 +2,30 @@
 import Scene from "@app/titan/Scene/Scene"
 import RenderEngine from "@titan/Renderer/Renderer"
 import PhysicsEngine from "@titan/PhysicsEngine/PhysicsEngine"
-import EditorScene from "../Scene/EditorScene"
 
-const SceneObject = {
-    "className": "EditorScene",
-    "id": "6599b283-ffd0-4140-962e-89284bc2fd12",
-    "name": "EditorScene 1",
+const myCode = {
+    "className": "Scene",
+    "id": "e35eafc3-7f68-4cda-83ce-40c4b753b62d",
+    "name": "Scene 1",
+    "runtime": false,
     "entities": {
-        "713ccadf-a2c6-422f-a69f-081994405b33": {
+        "d525bf3b-6464-4ae6-9b4e-c095daf7ba63": {
             "className": "Entity",
-            "id": "713ccadf-a2c6-422f-a69f-081994405b33",
+            "id": "d525bf3b-6464-4ae6-9b4e-c095daf7ba63",
             "name": "Entity 1",
-            "sceneId": "6599b283-ffd0-4140-962e-89284bc2fd12"
+            "sceneId": "e35eafc3-7f68-4cda-83ce-40c4b753b62d",
+            "runtime": false
         }
     },
     "components": {
         "TransformComponent": [
             {
                 "className": "TransformComponent",
-                "id": "6a0a6a38-adc5-40bb-85c3-5512b15dc892",
-                "name": "Transform 1",
-                "entityId": "713ccadf-a2c6-422f-a69f-081994405b33",
-                "position": {
-                    "x": 0,
-                    "y": 0,
-                    "z": 0
-                },
-                "rotation": {
-                    "x": 0,
-                    "y": 0,
-                    "z": 0
-                },
-                "scale": {
-                    "x": 1,
-                    "y": 1,
-                    "z": 1
-                }
-            },
-            {
-                "className": "TransformComponent",
-                "id": "b2d0663f-0af2-4287-b059-48d03d84913f",
-                "name": "Transform 2",
-                "entityId": "d011576d-7edc-4276-b94f-b6f249dc97c3",
+                "id": "358451fa-ae0b-4d15-ae27-2d0e4f5b5b2a",
+                "name": "TransformComponent 1",
+                "sceneId": "e35eafc3-7f68-4cda-83ce-40c4b753b62d",
+                "entityId": "d525bf3b-6464-4ae6-9b4e-c095daf7ba63",
+                "runtime": false,
                 "position": {
                     "x": 0,
                     "y": 0,
@@ -64,60 +46,52 @@ const SceneObject = {
         "ScriptComponent": [
             {
                 "className": "ScriptComponent",
-                "id": "3d754139-9061-426c-9cc7-710683f9277c",
+                "id": "59fe0ee4-c296-43f4-b0ff-4de39705fca5",
                 "name": "ScriptComponent 1",
-                "entityId": "713ccadf-a2c6-422f-a69f-081994405b33",
-                "ttn": {
-                    "className": "TTN",
-                    "id": "8a105153-b90b-41aa-aecb-ef79df1bf6ae",
-                    "name": "TTN 1",
-                    "scriptComponentId": "3d754139-9061-426c-9cc7-710683f9277c"
-                },
+                "sceneId": "e35eafc3-7f68-4cda-83ce-40c4b753b62d",
+                "entityId": "d525bf3b-6464-4ae6-9b4e-c095daf7ba63",
+                "runtime": false,
                 "scripts": {
-                    "testScript": {
+                    "SomeScript": {
                         "className": "Script",
-                        "id": "18bc91f4-4c05-422f-98c3-4ddcab71df5e",
-                        "name": "testScript",
-                        "sceneId": "6599b283-ffd0-4140-962e-89284bc2fd12",
-                        "entityId": "713ccadf-a2c6-422f-a69f-081994405b33",
+                        "id": "2c96d793-bd03-4939-84ff-6a69e3b01362",
+                        "name": "SomeScript",
+                        "sceneId": "e35eafc3-7f68-4cda-83ce-40c4b753b62d",
+                        "entityId": "d525bf3b-6464-4ae6-9b4e-c095daf7ba63",
+                        "runtime": false,
                         "attributes": {
                             "className": "Attributes",
-                            "id": "3e46479e-1305-4e5e-8829-f8d32df94741",
+                            "id": "9e3c030a-e404-4333-b05b-75f8e0eb07ab",
                             "name": "Attributes 1",
-                            "sceneId": "6599b283-ffd0-4140-962e-89284bc2fd12",
-                            "entityId": "713ccadf-a2c6-422f-a69f-081994405b33",
+                            "sceneId": "e35eafc3-7f68-4cda-83ce-40c4b753b62d",
+                            "entityId": "d525bf3b-6464-4ae6-9b4e-c095daf7ba63",
+                            "runtime": false,
                             "attributes": {
                                 "someAttribute": {
                                     "className": "ScriptAttribute",
-                                    "id": "e0c264ce-93ac-42a1-a377-6fcdabe24916",
+                                    "id": "b494d9d6-5249-4997-824c-5773118a4f27",
                                     "name": "someAttribute",
+                                    "runtime": false,
                                     "type": "string",
-                                    "description": "this is a test string"
-                                },
-                                "someNumber": {
-                                    "className": "ScriptAttribute",
-                                    "id": "a5624ccf-a1de-4975-962c-58af476e6d2f",
-                                    "name": "someNumber",
-                                    "type": "number",
-                                    "description": "this is a test number"
+                                    "value": "someValue",
+                                    "default": "someValue",
+                                    "description": "someDescription"
                                 }
                             }
                         },
-                        "componentId": "3d754139-9061-426c-9cc7-710683f9277c",
-                        "someAttribute": "Hello World",
-                        "someNumber": 0
+                        "componentId": "59fe0ee4-c296-43f4-b0ff-4de39705fca5",
+                        "code": "\n            const someScript = ttn.createScript(\"SomeScript\")\n\n            someScript.attributes.add(\"someAttribute\",{\n                type: \"string\",\n                value: \"someValue\",\n                description: \"someDescription\",\n                default: \"someDefault\"\n            })\n            const scene = this.app.root\n            someScript.init = function() {\n                this.someEntity = ttn.createEntity(\"SomeEntity\")\n                scene.addEntity(this.someEntity)\n            }\n        ",
+                        "someAttribute": "someDefault"
                     }
                 },
-                "code": "\n            const testScript = ttn.createScript(\"testScript\");\n            const bullet = ttn.createEntity()\n\n            class MyRigidBody extends Component {\n                constructor(entity) {\n                    super(entity)\n                }\n                update(dt) {\n                    console.log(\"updating\")\n                }\n            }\n\n            bullet.name = \"Big Bullet\"\n            this.entity.addComponent(new MyRigidBody(this.entity))\n            testScript.attributes.add(\"someAttribute\", {\n                type: \"string\",\n                default: \"Hello World\",\n                description:\"this is a test string\"\n            })\n\n            testScript.attributes.add(\"someNumber\", {\n                type: \"number\",\n                default: 0.0,\n                description:\"this is a test number\"\n            })\n\n            testScript.init = ()=> {\n                this.entity.removeComponent(\"MyRigidBody\")\n            }\n\n            testScript.update = (dt)=> {\n\n            }\n        "
-            }
-        ],
-        "MyRigidBody": [
-            {
-                "className": "MyRigidBody",
-                "id": "6befb28b-06f1-493e-b38c-d1b5a37a15ed",
-                "name": "MyRigidBody 1",
-                "sceneId": "6599b283-ffd0-4140-962e-89284bc2fd12",
-                "entityId": "713ccadf-a2c6-422f-a69f-081994405b33"
+                "app": {
+                    "className": "APP",
+                    "id": "985ee968-9d95-4dc8-9f05-eacda6852b9b",
+                    "name": "APP 1",
+                    "sceneId": "e35eafc3-7f68-4cda-83ce-40c4b753b62d",
+                    "entityId": "d525bf3b-6464-4ae6-9b4e-c095daf7ba63",
+                    "runtime": false
+                }
             }
         ]
     }
@@ -130,9 +104,9 @@ export default class Core {
     physicsEngine!: PhysicsEngine
     running = false
     init(canvas: HTMLCanvasElement, width = 800, height = 600) {
-        this.scene = new EditorScene()
-        this.scene.loadState(SceneObject)
+        this.scene = new Scene()
         Scene.changeScene(this.scene.id)
+        //this.scene.loadState(myCode)
         this.renderEngine = new RenderEngine("Titan Engine", canvas, width, height)
         this.physicsEngine = new PhysicsEngine()
         this.run();

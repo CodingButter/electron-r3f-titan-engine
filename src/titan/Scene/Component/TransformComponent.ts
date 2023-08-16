@@ -1,19 +1,21 @@
-import * as THREE from 'three';
+import { Vec3 } from '@titan/Core/Utils/Matrix';
 import Component from '@titan/Scene/Component/Component';
 
 export default class TransformComponent extends Component {
-    position: THREE.Vector3;
-    rotation: THREE.Vector3;
-    scale: THREE.Vector3;
-    constructor(position?: THREE.Vector3, rotation?: THREE.Vector3, scale?: THREE.Vector3) {
+    position: Vec3;
+    rotation: Vec3;
+    scale: Vec3;
+    constructor(position?: Vec3, rotation?: Vec3, scale?: Vec3) {
         super();
-        this.position = position || new THREE.Vector3();
-        this.rotation = rotation || new THREE.Vector3();
-        this.scale = scale || new THREE.Vector3(1, 1, 1);
+        this.position = position || new Vec3;
+        this.rotation = rotation || new Vec3();
+        this.scale = scale || new Vec3(1, 1, 1);
     }
     loadState(state: any) {
-        this.position = new THREE.Vector3(state.position.x, state.position.y, state.position.z);
-        this.rotation = new THREE.Vector3(state.rotation.x, state.rotation.y, state.rotation.z);
-        this.scale = new THREE.Vector3(state.scale.x, state.scale.y, state.scale.z);
+        super.loadState(state)
+        this.position = new Vec3(state.position.x, state.position.y, state.position.z);
+        this.rotation = new Vec3(state.rotation.x, state.rotation.y, state.rotation.z);
+        this.scale = new Vec3(state.scale.x, state.scale.y, state.scale.z);
+        this.entity?.addComponent(this)
     }
 }

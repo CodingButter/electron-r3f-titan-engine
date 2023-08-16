@@ -10,7 +10,7 @@ Map.prototype.toJSON = function () {
 }
 
 Set.prototype.toJSON = function () {
-    return [...this]
+    return [...this].filter((value) => value.toJSON() !== undefined)
 }
 
 export default class BaseClass {
@@ -19,11 +19,13 @@ export default class BaseClass {
     name: string = this.constructor.name
     sceneId?: string
     entityId?: string
+    runtime = false
     __scene: Scene | undefined
     __entity: Entity | undefined
     constructor(entity?: Entity, scene?: Scene) {
         this.scene = scene || entity?.scene
         this.entity = entity
+        this.runtime = entity?.runtime || false
         this.name = `${this.name} ${BaseClass.names.filter(name => name.includes(this.name)).length + 1}`
         BaseClass.names.push(this.name)
     }
@@ -44,7 +46,10 @@ export default class BaseClass {
         this.entityId = entity?.id
         this.__entity = entity
     }
-    toJSON(): object {
+    toJSON(): object | undefined {
+        if (this.runtime)
+            return
+
         Object.keys(this).forEach((key) => {
             if (key.startsWith("__")) {
                 delete this[key]
@@ -52,5 +57,11 @@ export default class BaseClass {
         })
         const jsonObject = { className: this.constructor.name, ...this }
         return jsonObject
+    }
+    loadState(state: any) {
+        this.name = state?.name
+        this.id = state.id;
+        this.scene = Scene?.getSceneById(state.sceneId)
+        this.entity = this.scene?.getEntityById(state.entityId)
     }
 }

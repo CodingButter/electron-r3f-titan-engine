@@ -14,6 +14,10 @@ export default class RenderEngine {
         this.renderer.setSize(this.display.width, this.display.height)
     }
 
+    addEntity(mesh: THREE.Mesh) {
+        this.scene.add(mesh)
+    }
+
 
     createCamera({ fov, aspect, near, far }: { fov: number, aspect: number, near: number, far: number }) {
         this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far)

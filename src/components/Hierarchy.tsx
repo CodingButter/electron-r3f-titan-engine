@@ -9,9 +9,10 @@ interface HierarchyProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Hierarchy = ({ expanded, setExpanded }: HierarchyProps) => {
-  const [entities, setEntities] = useState<Entity[]>([])
   const [selectedEntities, selectObjects] = useState<number[]>([])
-  const { titanEngine } = useTitanEngine()
+  const { titan } = useTitanEngine()
+  //set entities to titan scene entities convert map to array
+  const [entities, setEntities] = useState<Entity[]>([])
   const toggleExpanded = () => {
     setExpanded(!expanded)
   }
@@ -24,10 +25,11 @@ const Hierarchy = ({ expanded, setExpanded }: HierarchyProps) => {
   }
 
   const addCube = () => {
-    if (titanEngine) {
-      titanEngine.getCore().addCube(0, 0, -5, 1)
+    if (titan) {
+      const component = titan.scene.createEntity()
+      titan.scene.addEntity(component)
       setEntities(() => {
-        return [...titanEngine.getCore().entities]
+        return [...titan.scene.entities.values()]
       });
     }
   }
